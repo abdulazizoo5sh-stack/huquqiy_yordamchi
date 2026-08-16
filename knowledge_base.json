@@ -1,0 +1,199 @@
+{
+  "manba": "O'zbekiston Respublikasining Ma'muriy javobgarlik to'g'risidagi kodeksi (MJtK), 2026-yil holatiga",
+  "bhm_2026": "412 000 so'm (Bazaviy hisoblash miqdori, 2026-yil holatiga)",
+  "eslatma": "Bu ma'lumotlar umumiy yo'nalish uchun. Aniq va joriy summalarni doim lex.uz saytida yoki YHXX/soliq idorasida tekshiring, chunki qonunchilik tez-tez o'zgaradi.",
+  "kategoriyalar": [
+    {
+      "mavzu": "Xavfsizlik kamari va bolalar",
+      "kalit_sozlar": ["kamar", "xavfsizlik kamari", "bola", "bolalar o'rindig'i", "remen"],
+      "modda": "MJtK 125-modda (1-2 qism)",
+      "tavsif": "Xavfsizlik kamarini taqmasdan yoki bolani maxsus o'rindiqsiz tashish",
+      "jarima": "taxminan 206 000 so'm (0,5 BHM), kichik/birinchi holatlarda ogohlantirish ham beriladi",
+      "izoh": "2026-yil 4-fevraldan kichik ahamiyatli holatlar uchun jarima o'rniga yozma/elektron ogohlantirish qo'llanilishi mumkin, agar haydovchi pushaymon bo'lsa va boshqa buzilish yo'q bo'lsa."
+    },
+    {
+      "mavzu": "Hujjatlar (guvohnoma, texpasport) yo'qligi",
+      "kalit_sozlar": ["hujjat", "guvohnoma", "texpasport", "prava", "hujjatsiz"],
+      "modda": "MJtK tegishli moddasi (hujjatsiz boshqarish)",
+      "tavsif": "Haydovchilik guvohnomasi yoki texnik pasportni o'zi bilan olib yurmaslik",
+      "jarima": "taxminan 412 000 so'm (1 BHM)",
+      "izoh": "Agar guvohnoma umuman yo'q (olinmagan) bo'lsa, jazo og'irroq bo'lishi mumkin - qattiqroq tekshirish talab qilinadi."
+    },
+    {
+      "mavzu": "OSAGO (majburiy sug'urta) yo'qligi",
+      "kalit_sozlar": ["sug'urta", "osago", "sugurta", "sugʻurta"],
+      "modda": "MJtK tegishli moddasi",
+      "tavsif": "Majburiy avtosug'urta (OSAGO) polisisiz haydash",
+      "jarima": "taxminan 412 000 so'm (1 BHM)",
+      "izoh": "OSAGO O'zbekistonda barcha transport vositalari uchun majburiy."
+    },
+    {
+      "mavzu": "Svetofor/chorraha qoidalarini buzish",
+      "kalit_sozlar": ["svetofor", "qizil chiroq", "chorraha", "qizil svet"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Qizil chiroqda yoki taqiqlovchi belgida chorrahadan o'tish",
+      "jarima": "taxminan 824 000 so'm (2 BHM)",
+      "izoh": "Ko'pincha kamera orqali avtomatik qayd etiladi."
+    },
+    {
+      "mavzu": "Noto'g'ri to'xtash / parkovka",
+      "kalit_sozlar": ["parkovka", "to'xtash", "toʻxtash", "avtoturargoh", "notogri toxtash"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Taqiqlangan joyda to'xtash yoki to'xtab turish",
+      "jarima": "taxminan 824 000 so'm (2 BHM)",
+      "izoh": "Piyodalar yo'lagi, chorraha yaqinida, nogironlar joyi kabi joylarda qattiqroq javobgarlik bo'lishi mumkin."
+    },
+    {
+      "mavzu": "Rulda telefondan foydalanish",
+      "kalit_sozlar": ["telefon", "rulda telefon", "qo'lda telefon"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Transport vositasini boshqarish vaqtida qo'lda uyali telefondan foydalanish (hands-free'siz)",
+      "jarima": "taxminan 1 236 000 so'm (3 BHM)",
+      "izoh": "Hands-free yoki dinamik orqali gaplashish taqiqlanmagan."
+    },
+    {
+      "mavzu": "Davlat raqamisiz yoki yashiringan raqam bilan boshqarish",
+      "kalit_sozlar": ["raqam", "davlat raqami", "nomer", "raqamsiz", "raqamni yashirish"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Davlat raqami bo'lmagan yoki yashirilgan/o'qib bo'lmaydigan holatda haydash",
+      "jarima": "taxminan 2 060 000 so'm (5 BHM), takrorlansa avtomobil vaqtincha olib qo'yilishi mumkin",
+      "izoh": "Qasddan raqamni yashirish alohida qattiq javobgarlikka olib keladi."
+    },
+    {
+      "mavzu": "Piyodaga yo'l bermaslik",
+      "kalit_sozlar": ["piyoda", "piyodaga yo'l bermaslik", "o'tish joyi"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Piyodalar o'tish joyida piyodaga yo'l bermaslik",
+      "jarima": "taxminan 412 000 so'm (1 BHM)",
+      "izoh": "Kamera yoki YHX inspektori tomonidan qayd etilishi mumkin."
+    },
+    {
+      "mavzu": "Tezlikni oshirish - 20 km/soatgacha",
+      "kalit_sozlar": ["tezlik", "tezlikni oshirish", "20 km", "sekundomer", "radar"],
+      "modda": "MJtK 1281-modda (tezlik bo'yicha modda guruhi)",
+      "tavsif": "Belgilangan tezlikdan 20 km/soatgacha oshirib haydash",
+      "jarima": "1-marta ~412 000 so'm (1 BHM); 1 yil ichida takroran ~2 060 000 so'm (5 BHM); 3-marta ~6 180 000 so'm yoki 1 yilgacha huquqdan mahrum qilinishi",
+      "izoh": "2026-yildan bu toifada kichik oshirishlar (20 km/soatgacha) uchun ba'zan ogohlantirish ham qo'llanilishi mumkin."
+    },
+    {
+      "mavzu": "Tezlikni oshirish - 20-40 km/soat",
+      "kalit_sozlar": ["tezlik", "40 km", "tez haydash"],
+      "modda": "MJtK tezlik bo'yicha modda",
+      "tavsif": "Belgilangan tezlikdan 20-40 km/soat oshirib haydash",
+      "jarima": "1-marta ~2 060 000 so'm (5 BHM); takroran ~6 180 000 so'm yoki huquqdan mahrum qilinishi",
+      "izoh": "Kamera orqali avtomatik aniqlanadigan eng keng tarqalgan buzilishlardan biri."
+    },
+    {
+      "mavzu": "Tezlikni oshirish - 40 km/soatdan yuqori",
+      "kalit_sozlar": ["tezlik", "juda tez", "80 km"],
+      "modda": "MJtK tezlik bo'yicha modda",
+      "tavsif": "Belgilangan tezlikdan 40 km/soatdan ko'proq oshirib haydash",
+      "jarima": "1-marta ~3 708 000 so'm; takroran ~10 300 000 so'm va 2 yilgacha huquqdan mahrum qilinishi",
+      "izoh": "80 km/soatdan ortiq oshirish uchun huquqdan mahrum qilish va yiriklashtirilgan jarima (loyihada ~26,8 mln so'mgacha) muhokama qilinmoqda - bu qonun loyihasi bosqichida, tasdiqlanganini tekshirish kerak."
+    },
+    {
+      "mavzu": "Mast holda transport boshqarish",
+      "kalit_sozlar": ["mast", "ichgan", "alkogol", "spirtli", "aroq ichib"],
+      "modda": "MJtK tegishli modda (og'ir toifa)",
+      "tavsif": "Alkogol yoki boshqa mastlik holatida transport vositasini boshqarish",
+      "jarima": "10 300 000 so'mgacha va 3 yilgacha haydovchilik huquqidan mahrum qilinishi",
+      "izoh": "Bu eng og'ir moliyaviy va huquqiy oqibatlarga olib keladigan buzilishlardan biri; chegirmalar (50%/30%) bunday holatlarga qo'llanilmaydi. Og'ir holatlarda jinoiy javobgarlik ham bo'lishi mumkin."
+    },
+    {
+      "mavzu": "Qarama-qarshi yo'lakka (harakatga qarshi tomonga) chiqish",
+      "kalit_sozlar": ["qarama-qarshi", "teskari yo'lak", "noto'g'ri tomon"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Qarama-qarshi harakat yo'lagiga taqiqlangan holda chiqish",
+      "jarima": "taxminan 4 120 000 so'm (10 BHM)",
+      "izoh": "Alohida xavfli buzilish sifatida qaraladi, ko'pincha huquqdan mahrum qilish bilan birga keladi."
+    },
+    {
+      "mavzu": "Qoidabuzarlik bilan obgon (quvib o'tish)",
+      "kalit_sozlar": ["obgon", "quvib o'tish", "kesib o'tish"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Taqiqlangan joyda yoki tartibda boshqa transportni quvib o'tish",
+      "jarima": "1-marta ~2 060 000 so'mgacha; takroran ~4 120 000 so'm va huquqdan mahrum qilinishi mumkin",
+      "izoh": "Uch chiziqli yo'l, ko'rinish yomon joy yoki taqiqlovchi belgi bo'lgan joyda obgon eng xavfli holatlardan biri."
+    },
+    {
+      "mavzu": "Yo'l-transport hodisasi (YTH) - faqat moddiy zarar",
+      "kalit_sozlar": ["avariya", "yth", "to'qnashuv", "moddiy zarar"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Haydovchi aybi bilan YTH yuz berib, faqat transport vositalari shikastlangan",
+      "jarima": "taxminan 1 680 000 so'mdan boshlab",
+      "izoh": "Ikkala tomon ham OSAGO orqali zararni qoplashi mumkin, biroq aybdorlik ma'muriy javobgarlikni istisno qilmaydi."
+    },
+    {
+      "mavzu": "YTH - yengil tan jarohati yoki katta moddiy zarar",
+      "kalit_sozlar": ["jarohat", "tan jarohati", "yaralanish"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Haydovchi aybi bilan YTH natijasida yengil tan jarohati yetkazilishi yoki katta moddiy zarar",
+      "jarima": "taxminan 2 884 000 so'mgacha yoki 3 yilgacha haydovchilik huquqidan mahrum qilinishi",
+      "izoh": "Og'ir tan jarohati yoki o'lim holatlarida ish Jinoyat kodeksi doirasida ko'rilishi mumkin - bu holda ma'muriy emas, balki jinoiy javobgarlik masalasi."
+    },
+    {
+      "mavzu": "YTH joyidan qochish",
+      "kalit_sozlar": ["qochish", "hodisa joyidan qochish", "tashlab ketish"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Hodisa joyini o'z ixtiyori bilan tark etish",
+      "jarima": "taxminan 6 180 000 so'm yoki ma'muriy qamoq / haydovchilik huquqidan mahrum qilinishi",
+      "izoh": "Bu eng og'ir ma'muriy buzilishlardan biri hisoblanadi va sud tomonidan ko'riladi."
+    },
+    {
+      "mavzu": "Ruxsatsiz sirena/migalka, davlat raqamini yashirish",
+      "kalit_sozlar": ["sirena", "migalka", "signal"],
+      "modda": "MJtK tegishli modda",
+      "tavsif": "Ruxsatsiz maxsus ovozli/yorug'lik signal moslamalarini o'rnatish yoki davlat raqamini yashirish",
+      "jarima": "412 000 so'mdan 1 236 000 so'mgacha",
+      "izoh": "Maxsus xizmat transportlariga taqlid qilish alohida og'ir hisoblanadi."
+    },
+    {
+      "mavzu": "Jarimani to'lash muddati",
+      "kalit_sozlar": ["qachongacha", "to'lash", "muddat", "necha kun", "qachon tolayman"],
+      "modda": "MJtK protsedura qismi",
+      "tavsif": "Jarimani qachongacha to'lash kerakligi",
+      "jarima": "-",
+      "izoh": "Odatiy holatlarda 30 kun ichida, kamera orqali qayd etilgan jarimalarda 60 kungacha. Qaror 17 kun ichida chiqarilishi shart, aks holda ish tugatiladi."
+    },
+    {
+      "mavzu": "Jarimaga chegirma",
+      "kalit_sozlar": ["chegirma", "50 foiz", "arzon to'lash", "kamaytirish"],
+      "modda": "MJtK protsedura qismi",
+      "tavsif": "Jarimani tezroq to'lasangiz chegirma bo'ladimi",
+      "jarima": "-",
+      "izoh": "Xabarnoma kelgan kundan 15 kun ichida to'lansa - 50% chegirma; 16-30 kun oralig'ida - 30% chegirma. Mast holda haydash kabi og'ir buzilishlarga chegirma qo'llanilmaydi."
+    },
+    {
+      "mavzu": "Jarima qaroriga shikoyat qilish",
+      "kalit_sozlar": ["shikoyat", "norozi", "sudga berish", "e'tiroz"],
+      "modda": "MJtK protsedura qismi",
+      "tavsif": "Jarima to'g'ri chiqmagan deb hisoblasangiz nima qilish kerak",
+      "jarima": "-",
+      "izoh": "Qarordan norozi bo'lsangiz, uni yuqori turuvchi organga yoki sudga (odatda 10 kun ichida) shikoyat qilishingiz mumkin. Kamera orqali qayd etilgan holatlarda shikoyat qilinganda jazo qo'llash muddati uzayadi, lekin huquqbuzarlik sodir bo'lgan kundan 1 yildan oshmaydi."
+    },
+    {
+      "mavzu": "Jarima bor-yo'qligini tekshirish",
+      "kalit_sozlar": ["tekshirish", "jarima bormi", "my.gov.uz", "qanday tekshirsam"],
+      "modda": "-",
+      "tavsif": "Jarima kelgan-kelmaganini qayerdan bilsa bo'ladi",
+      "jarima": "-",
+      "izoh": "my.gov.uz portali (OneID orqali), bank ilovalari yoki click/payme kabi to'lov tizimlari orqali jarima borligini tekshirish va to'lash mumkin."
+    },
+    {
+      "mavzu": "Jarima o'rniga ogohlantirish",
+      "kalit_sozlar": ["ogohlantirish", "birinchi marta", "jarima bermadi"],
+      "modda": "MJtK 241-modda",
+      "tavsif": "Ba'zi holatlarda jarima o'rniga faqat ogohlantirish berilishi",
+      "jarima": "-",
+      "izoh": "2026-yil 4-fevraldan boshlab (O'RQ-1116-son qonun) ayrim kichik ahamiyatli buzilishlar uchun, agar haydovchi pushaymon bo'lsa va boshqa buzilish yo'q bo'lsa, jarima o'rniga yozma/elektron ogohlantirish berilishi mumkin."
+    },
+    {
+      "mavzu": "Jarima ballari tizimi",
+      "kalit_sozlar": ["ball", "jarima balli", "huquqdan mahrum bo'lish"],
+      "modda": "MJtK 341-modda",
+      "tavsif": "Ko'p marta qoidabuzarlik qilsa nima bo'ladi",
+      "jarima": "-",
+      "izoh": "2025-yildan boshlab har bir qoidabuzarlik uchun jarima ball beriladi. Ballar belgilangan chegaradan oshsa, tuman/shahar sudi orqali haydovchilik huquqidan vaqtincha mahrum qilinishi mumkin."
+    }
+  ]
+}
