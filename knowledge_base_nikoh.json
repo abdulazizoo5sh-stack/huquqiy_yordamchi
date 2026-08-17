@@ -1,0 +1,103 @@
+{
+  "manba": "O'zbekiston Respublikasining Oila kodeksi, 2026-yil holatiga",
+  "bhm_2026": "412 000 so'm (Bazaviy hisoblash miqdori, 2026-yil holatiga)",
+  "eslatma": "Bu ma'lumotlar umumiy yo'nalish uchun. Aniq va joriy tartiblarni doim lex.uz, gov.uz yoki FHDYo/sud orqali tekshiring, chunki qonunchilik va tartiblar tez-tez o'zgaradi.",
+  "kategoriyalar": [
+    {
+      "mavzu": "Nikohdan ajratish - FHDYo orqali (sudsiz)",
+      "kalit_sozlar": ["ajralish", "ajrashish", "fhdyo", "sudsiz ajralish", "ikkalamiz ham rozimiz"],
+      "modda": "Oila kodeksi 42-modda",
+      "tavsif": "Bolasi yo'q va mol-mulk bo'yicha nizosi bo'lmagan er-xotin FHDYo (fuqarolik holati dalolatnomalarini yozish) organi orqali ajralishi mumkin",
+      "jarima": "-",
+      "izoh": "Agar xotin homilador bo'lsa, FHDYo arizani qabul qilmaydi. Ariza YaIDXP (my.gov.uz) orqali elektron shaklda ham berilishi mumkin, Face-ID/MyID orqali tasdiqlanadi. FHDYo ariza kelgan kundan 3 kun ichida yarashtirish choralari ko'rishi mumkin."
+    },
+    {
+      "mavzu": "Nikohdan ajratish - sud orqali",
+      "kalit_sozlar": ["sudga ajralish", "sud orqali ajralish", "voyaga yetmagan bola bilan ajralish"],
+      "modda": "Oila kodeksi 43-44-modda",
+      "tavsif": "Agar bolalar bor, mol-mulk nizosi yoki turmush o'rtog'iga nafaqa masalasi bo'lsa, ajralish faqat sud orqali amalga oshadi",
+      "jarima": "-",
+      "izoh": "Sud bolalar kim bilan qolishi, aliment miqdori va mol-mulk bo'linishini ham hal qiladi. Bitta tomon rozi bo'lmasa ham sud ajratish to'g'risida qaror chiqarishi mumkin."
+    },
+    {
+      "mavzu": "Aliment (bolalar uchun nafaqa) miqdori",
+      "kalit_sozlar": ["aliment", "bola nafaqasi", "aliment miqdori", "bolaga pul"],
+      "modda": "Oila kodeksi 5-bo'lim (96-119-modda)",
+      "tavsif": "Ota-ona voyaga yetmagan bolasiga moddiy ta'minot berishi shart, kelishilmasa sud orqali undiriladi",
+      "jarima": "1 bola uchun - daromadning 1/4 (25%); 2 bola uchun - 1/3 (33,3%); 3 va undan ortiq bola uchun - 1/2 (50%)",
+      "izoh": "Har bir bola uchun aliment miqdori eng kam ish haqining 26,5 foizidan kam bo'lmasligi kerak. Sud taraflarning moddiy va oilaviy ahvolini hisobga olib bu miqdorni kamaytirishi yoki oshirishi mumkin."
+    },
+    {
+      "mavzu": "Aliment - ixtiyoriy kelishuv orqali",
+      "kalit_sozlar": ["aliment kelishuvi", "notarial kelishuv", "o'zaro kelishib aliment"],
+      "modda": "Oila kodeksi 130-modda",
+      "tavsif": "Ota-onalar sudga bormasdan, o'zaro yozma kelishuv orqali aliment miqdori va tartibini belgilashi mumkin",
+      "jarima": "-",
+      "izoh": "Bunday kelishuv yozma shaklda tuzilib, notarial tartibda tasdiqlanishi shart. Notarial tasdiqlanmasa, Fuqarolik kodeksida nazarda tutilgan salbiy oqibatlarga olib kelishi mumkin."
+    },
+    {
+      "mavzu": "Mehnatga layoqatsiz turmush o'rtog'iga aliment",
+      "kalit_sozlar": ["sobiq xotinga aliment", "sobiq erga aliment", "nogiron turmush o'rtoq"],
+      "modda": "Oila kodeksi 101-modda",
+      "tavsif": "Yordamga muhtoj, mehnatga layoqatsiz er yoki xotin (shu jumladan sobiq) uchun aliment belgilanishi mumkin",
+      "jarima": "Har oyda qat'iy summada, eng kam ish haqining 11,75 foizidan kam bo'lmagan miqdorda",
+      "izoh": "Miqdor sud tomonidan taraflarning moddiy va oilaviy ahvoli hisobga olinib belgilanadi."
+    },
+    {
+      "mavzu": "Aliment to'lamaslik (qarzdorlik)",
+      "kalit_sozlar": ["aliment tolamayapti", "aliment qarzi", "aliment bermayapti", "qarzdor"],
+      "modda": "Oila kodeksi va Ijro ishlari to'g'risidagi qonunchilik",
+      "tavsif": "Agar aliment to'lovchi ixtiyoriy ravishda to'lamasa, majburiylik bilan (ijro ishlari orqali) undiriladi",
+      "jarima": "-",
+      "izoh": "Bola bilan yashaydigan ota-ona sud ijrochilari yoki ma'lum davlat xizmatlari orqali aliment undirishga yordam so'rashi mumkin. Uzoq muddat to'lamaslik jinoiy javobgarlikka ham olib kelishi mumkin."
+    },
+    {
+      "mavzu": "Er-xotinning umumiy mol-mulkini bo'lish",
+      "kalit_sozlar": ["mol mulk bolish", "kvartira bolish", "mulk ajralish", "umumiy mulk"],
+      "modda": "Oila kodeksi (Fuqarolik kodeksiga havola qiluvchi qism)",
+      "tavsif": "Nikoh davomida orttirilgan mol-mulk odatda ikkala tomonning umumiy mulki hisoblanadi va ajralishda teng yoki kelishilgan nisbatda bo'linadi",
+      "jarima": "-",
+      "izoh": "Nikohgacha bo'lgan mulk yoki meros/sovg'a tariqasida olingan mulk odatda umumiy mulkka kirmaydi. Nizo bo'lsa, masala faqat sud tartibida hal qilinadi."
+    },
+    {
+      "mavzu": "Nikoh shartnomasi",
+      "kalit_sozlar": ["nikoh shartnomasi", "brachniy kontrakt", "mulkni oldindan taqsimlash"],
+      "modda": "Oila kodeksi tegishli bo'limi",
+      "tavsif": "Er-xotin nikohdan oldin yoki nikoh davomida notarial tasdiqlangan shartnoma orqali mol-mulk masalalarini oldindan belgilashi mumkin",
+      "jarima": "-",
+      "izoh": "Nikoh shartnomasi bo'lsa, mol-mulk bo'linishi odatdagi qoidalar o'rniga shu shartnoma asosida hal qilinadi."
+    },
+    {
+      "mavzu": "Bolaning kim bilan qolishi (voyaga yetmaganlar taqdiri)",
+      "kalit_sozlar": ["bola kim bilan qoladi", "bola tarbiyasi", "bolani berish", "opeka"],
+      "modda": "Oila kodeksi 44-modda",
+      "tavsif": "Sud ajralish paytida bola kim bilan yashashini, ikkinchi ota-ona bilan uchrashish tartibini va aliment masalasini hal qiladi",
+      "jarima": "-",
+      "izoh": "Sud bolaning yoshi, manfaati va har ikki ota-onaning sharoitini hisobga oladi. Ota-onalar o'zaro kelishuvni ham sudga taqdim etishi mumkin."
+    },
+    {
+      "mavzu": "Nikoh tuzish yoshi va shartlari",
+      "kalit_sozlar": ["nikoh yoshi", "nikohga kirish", "nikoh tuzish shartlari"],
+      "modda": "Oila kodeksi (Nikoh bo'limi)",
+      "tavsif": "Nikohga kirish uchun umumiy yosh chegarasi va boshqa shartlar (ikki tomonning roziligi, tibbiy ko'rikdan o'tish va h.k.) belgilangan",
+      "jarima": "-",
+      "izoh": "Alohida holatlarda (uzrli sabablar bo'lganda) yosh chegarasi pasaytirilishi mumkin, bu sud yoki tegishli davlat organi qaroriga bog'liq."
+    },
+    {
+      "mavzu": "Nikohni haqiqiy emas deb topish",
+      "kalit_sozlar": ["fiktiv nikoh", "soxta nikoh", "nikoh bekor"],
+      "modda": "Oila kodeksi tegishli bo'limi",
+      "tavsif": "Majburlab, aldab yoki qonunda taqiqlangan holatlarda (masalan yaqin qarindoshlar orasida) tuzilgan nikoh sud tomonidan haqiqiy emas deb topilishi mumkin",
+      "jarima": "-",
+      "izoh": "Bu oddiy ajralishdan farq qiladi - nikoh boshidanoq yuridik kuchga ega bo'lmagan deb hisoblanadi va oqibatlari boshqacha bo'lishi mumkin."
+    },
+    {
+      "mavzu": "Ajralish uchun to'lov/gerb yig'imi",
+      "kalit_sozlar": ["ajralish narxi", "qancha turadi ajralish", "davlat boji", "gerb yigimi"],
+      "modda": "Vazirlar Mahkamasi qarori (gerb yig'imi tartibi)",
+      "tavsif": "FHDYo yoki sud orqali ajralishda ma'lum davlat boji (gerb yig'imi) to'lanadi",
+      "jarima": "Aniq summa holatga (FHDYo/sud, takroriy nikohni bekor qilish va h.k.) qarab farqlanadi, masalan takroriy nikohni bekor qilish uchun BHMning 4 baravari kabi holatlar uchraydi",
+      "izoh": "Aniq summani ariza berish vaqtida FHDYo yoki sudda tekshirib oling, chunki bu holatga qarab farq qiladi."
+    }
+  ]
+}
