@@ -1,13 +1,9 @@
-
 """
-Huquqiy yordamchi Telegram boti - KO'P SOHALI, WEBHOOK + TUGMALI MENYU
+Huquqiy yordamchi Telegram boti - AVTO + NIKOH + KONSTITUTSIYA
 ------------------------------------------------------------------------
 Bepul hostingda (Render.com) 24/7 ishlaydi. Hech qanday pullik AI API
-ishlatilmaydi - faqat kalit so'z qidiruvi + Telegram inline tugmalari.
-
-Hozircha 2 ta soha bor: Avto huquqi va Nikoh/oila huquqi.
-Yangi soha qo'shish uchun: yangi knowledge_base_<soha>.json fayl yarating
-va DOMAINS lug'atiga qo'shing (pastda tushuntirilgan).
+ishlatilmaydi - kalit so'z qidiruvi (avto/nikoh) + to'liq matn qidiruvi
+(konstitutsiya) + Telegram inline tugmalari.
 
 Muhit o'zgaruvchilari (Render dashboard'da "Environment" bo'limida):
     BOT_TOKEN - BotFather'dan olingan token
@@ -28,24 +24,19 @@ TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 app = Flask(__name__)
 
 
-def load_kb(filename: str) -> list:
+def load_json(filename: str) -> dict:
     path = os.path.join(BASE_DIR, filename)
     with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)["kategoriyalar"]
+        return json.load(f)
 
 
 # ---------------------------------------------------------------------
-# SOHALAR RO'YXATI - yangi soha qo'shish uchun shu yerga qo'shing:
-#   "domain_kaliti": {
-#       "label": "🆕 Soha nomi",
-#       "file": "knowledge_base_<soha>.json",
-#       "quick_topics": [(kategoriya_indeksi, "Tugma matni"), ...]
-#   }
+# ODDIY SOHALAR (avto, nikoh) - kalit so'z asosida qidiriladi
 # ---------------------------------------------------------------------
 DOMAINS = {
     "avto": {
         "label": "🚗 Avto huquqi",
-        "categories": load_kb("knowledge_base.json"),
+        "categories": load_json("knowledge_base.json")["kategoriyalar"],
         "quick_topics": [
             (8, "🚓 Tezlik"),
             (3, "🚦 Svetofor"),
@@ -61,7 +52,7 @@ DOMAINS = {
     },
     "nikoh": {
         "label": "💍 Nikoh / oila huquqi",
-        "categories": load_kb("knowledge_base_nikoh.json"),
+        "categories": load_json("knowledge_base_nikoh.json")["kategoriyalar"],
         "quick_topics": [
             (0, "📝 Ajratish (FHDYo)"),
             (1, "⚖️ Ajratish (sud)"),
@@ -75,6 +66,21 @@ DOMAINS = {
     },
 }
 
+# ---------------------------------------------------------------------
+# KONSTITUTSIYA - bo'lim -> bob -> modda tuzilishi, to'liq matn qidiruvi
+# ---------------------------------------------------------------------
+KONST = load_json("knowledge_base_konstitutsiya.json")
+KONST_BOLIMLAR = KONST["bolimlar"]
+
+KONST_BOLIM_QISQA = [
+    "1-bo'lim: Asosiy prinsiplar",
+    "2-bo'lim: Inson huquqlari",
+    "3-bo'lim: Jamiyat va shaxs",
+    "4-bo'lim: Hududiy tuzilish",
+    "5-bo'lim: Davlat hokimiyati",
+    "6-bo'lim: O'zgartirish tartibi",
+]
+
 APOSTROPHE_PATTERN = re.compile(r"[ʻʼ`´']")
 
 
@@ -86,16 +92,28 @@ def normalize(text: str) -> str:
 
 
 def find_matches(user_text: str, top_n: int = 3):
-    """Barcha sohalar bo'yicha qidiradi, natijada (domain_key, kategoriya) qaytadi."""
+    """Avto/nikoh (kalit so'z) + konstitutsiya (to'liq matn) bo'yicha qidiradi."""
     norm_text = normalize(user_text)
+    query_words = [w for w in norm_text.split() if len(w) >= 4]
     scored = []
+
     for domain_key, domain in DOMAINS.items():
         for cat in domain["categories"]:
             score = sum(1 for kw in cat["kalit_sozlar"] if normalize(kw) in norm_text)
             if score > 0:
-                scored.append((score, domain_key, cat))
+                scored.append((score, "kat", domain_key, cat))
+
+    if query_words:
+        for b_idx, bolim in enumerate(KONST_BOLIMLAR):
+            for bob_idx, bob in enumerate(bolim["boblar"]):
+                for m_idx, modda in enumerate(bob["moddalar"]):
+                    norm_matn = normalize(modda["matn"])
+                    score = sum(1 for w in query_words if w in norm_matn)
+                    if score > 0:
+                        scored.append((score, "konst", (b_idx, bob_idx, m_idx), modda))
+
     scored.sort(key=lambda x: x[0], reverse=True)
-    return [(dk, cat) for _, dk, cat in scored[:top_n]]
+    return scored[:top_n]
 
 
 def format_category(domain_key: str, cat: dict) -> str:
@@ -109,6 +127,20 @@ def format_category(domain_key: str, cat: dict) -> str:
         lines.append(f"Jarima/Miqdor: {cat['jarima']}")
     if cat.get("izoh"):
         lines.append(f"Izoh: {cat['izoh']}")
+    return "\n".join(lines)
+
+
+def format_modda(b_idx: int, bob_idx: int, m_idx: int) -> str:
+    bolim = KONST_BOLIMLAR[b_idx]
+    bob = bolim["boblar"][bob_idx]
+    modda = bob["moddalar"][m_idx]
+    lines = [
+        "⚖️ O'zbekiston Respublikasi Konstitutsiyasi",
+        f"{bob['nomi']}",
+        f"📜 {modda['raqam']}-modda",
+        "",
+        modda["matn"],
+    ]
     return "\n".join(lines)
 
 
@@ -129,7 +161,8 @@ START_MESSAGE = (
     "Quyidagi sohalardan birini tanlang yoki muammoingizni to'g'ridan-to'g'ri "
     "o'z so'zlaringiz bilan yozing - masalan:\n"
     "• \"tezlikni oshirib qoldim\"\n"
-    "• \"aliment qancha to'lanadi\"\n\n"
+    "• \"aliment qancha to'lanadi\"\n"
+    "• \"so'z erkinligi\"\n\n"
     "⚠️ Eslatma: men rasmiy yurist emasman, javoblarim umumiy yo'nalish "
     "uchun. Muhim holatlarda malakali yuristga murojaat qiling."
 )
@@ -137,6 +170,7 @@ START_MESSAGE = (
 
 def domain_selection_keyboard() -> dict:
     rows = [[{"text": d["label"], "callback_data": f"dom_{key}"}] for key, d in DOMAINS.items()]
+    rows.append([{"text": "⚖️ Konstitutsiya", "callback_data": "dom_konst"}])
     return {"inline_keyboard": rows}
 
 
@@ -156,6 +190,53 @@ def answer_keyboard(domain_key: str) -> dict:
     return {
         "inline_keyboard": [
             [{"text": "🔙 Mavzular", "callback_data": f"dom_{domain_key}"}],
+            [{"text": "🏠 Sohalar menyusi", "callback_data": "menu_main"}],
+        ]
+    }
+
+
+def konst_bolim_keyboard() -> dict:
+    rows = []
+    for i, _ in enumerate(KONST_BOLIMLAR):
+        label = KONST_BOLIM_QISQA[i] if i < len(KONST_BOLIM_QISQA) else f"{i+1}-bo'lim"
+        rows.append([{"text": label, "callback_data": f"kb_{i}"}])
+    rows.append([{"text": "🏠 Sohalar menyusi", "callback_data": "menu_main"}])
+    return {"inline_keyboard": rows}
+
+
+def konst_bob_keyboard(b_idx: int) -> dict:
+    bolim = KONST_BOLIMLAR[b_idx]
+    rows = []
+    for j, bob in enumerate(bolim["boblar"]):
+        # Bob nomini qisqartirish (tugma matni uzun bo'lmasligi uchun)
+        label = bob["nomi"]
+        if len(label) > 40:
+            label = label[:37] + "..."
+        rows.append([{"text": label, "callback_data": f"kbob_{b_idx}_{j}"}])
+    rows.append([{"text": "🔙 Bo'limlar", "callback_data": "dom_konst"}])
+    rows.append([{"text": "🏠 Sohalar menyusi", "callback_data": "menu_main"}])
+    return {"inline_keyboard": rows}
+
+
+def konst_modda_keyboard(b_idx: int, bob_idx: int) -> dict:
+    bob = KONST_BOLIMLAR[b_idx]["boblar"][bob_idx]
+    rows = []
+    moddalar = bob["moddalar"]
+    for i in range(0, len(moddalar), 4):
+        row = []
+        for k in range(i, min(i + 4, len(moddalar))):
+            raqam = moddalar[k]["raqam"]
+            row.append({"text": f"{raqam}-modda", "callback_data": f"km_{b_idx}_{bob_idx}_{k}"})
+        rows.append(row)
+    rows.append([{"text": "🔙 Boblar", "callback_data": f"kb_{b_idx}"}])
+    rows.append([{"text": "🏠 Sohalar menyusi", "callback_data": "menu_main"}])
+    return {"inline_keyboard": rows}
+
+
+def konst_modda_answer_keyboard(b_idx: int, bob_idx: int) -> dict:
+    return {
+        "inline_keyboard": [
+            [{"text": "🔙 Modda ro'yxati", "callback_data": f"kbob_{b_idx}_{bob_idx}"}],
             [{"text": "🏠 Sohalar menyusi", "callback_data": "menu_main"}],
         ]
     }
@@ -192,26 +273,62 @@ def webhook():
         chat_id = callback_query["message"]["chat"]["id"]
         data = callback_query.get("data", "")
 
-        if data == "menu_main":
-            send_message(chat_id, START_MESSAGE, reply_markup=domain_selection_keyboard())
-        elif data.startswith("dom_"):
-            domain_key = data.split("_", 1)[1]
-            if domain_key in DOMAINS:
-                label = DOMAINS[domain_key]["label"]
+        try:
+            if data == "menu_main":
+                send_message(chat_id, START_MESSAGE, reply_markup=domain_selection_keyboard())
+
+            elif data == "dom_konst":
                 send_message(
                     chat_id,
-                    f"{label}\n\nMavzu tanlang yoki muammoingizni yozing:",
-                    reply_markup=topics_keyboard(domain_key),
+                    "⚖️ Konstitutsiya\n\nBo'lim tanlang:",
+                    reply_markup=konst_bolim_keyboard(),
                 )
-        elif data.startswith("topic_"):
-            try:
+
+            elif data.startswith("dom_"):
+                domain_key = data.split("_", 1)[1]
+                if domain_key in DOMAINS:
+                    label = DOMAINS[domain_key]["label"]
+                    send_message(
+                        chat_id,
+                        f"{label}\n\nMavzu tanlang yoki muammoingizni yozing:",
+                        reply_markup=topics_keyboard(domain_key),
+                    )
+
+            elif data.startswith("topic_"):
                 _, domain_key, idx_str = data.split("_", 2)
                 idx = int(idx_str)
                 cat = DOMAINS[domain_key]["categories"][idx]
                 reply = format_category(domain_key, cat) + DISCLAIMER
                 send_message(chat_id, reply, reply_markup=answer_keyboard(domain_key))
-            except (ValueError, IndexError, KeyError):
-                send_message(chat_id, NOT_FOUND_MESSAGE, reply_markup=domain_selection_keyboard())
+
+            elif data.startswith("kbob_"):
+                _, b_idx_str, bob_idx_str = data.split("_", 2)
+                b_idx, bob_idx = int(b_idx_str), int(bob_idx_str)
+                bob = KONST_BOLIMLAR[b_idx]["boblar"][bob_idx]
+                send_message(
+                    chat_id,
+                    f"⚖️ {bob['nomi']}\n\nModda tanlang:",
+                    reply_markup=konst_modda_keyboard(b_idx, bob_idx),
+                )
+
+            elif data.startswith("kb_"):
+                b_idx = int(data.split("_", 1)[1])
+                bolim = KONST_BOLIMLAR[b_idx]
+                send_message(
+                    chat_id,
+                    f"⚖️ {bolim['nomi']}\n\nBob tanlang:",
+                    reply_markup=konst_bob_keyboard(b_idx),
+                )
+
+            elif data.startswith("km_"):
+                _, b_idx_str, bob_idx_str, m_idx_str = data.split("_", 3)
+                b_idx, bob_idx, m_idx = int(b_idx_str), int(bob_idx_str), int(m_idx_str)
+                reply = format_modda(b_idx, bob_idx, m_idx) + DISCLAIMER
+                send_message(chat_id, reply, reply_markup=konst_modda_answer_keyboard(b_idx, bob_idx))
+
+        except (ValueError, IndexError, KeyError):
+            send_message(chat_id, NOT_FOUND_MESSAGE, reply_markup=domain_selection_keyboard())
+
         return "ok", 200
 
     # --- Oddiy matnli xabar ---
@@ -231,9 +348,16 @@ def webhook():
         send_message(chat_id, NOT_FOUND_MESSAGE, reply_markup=domain_selection_keyboard())
         return "ok", 200
 
-    reply = "\n\n---\n\n".join(
-        format_category(dk, cat) for dk, cat in matches
-    ) + DISCLAIMER
+    parts = []
+    for item in matches:
+        if item[1] == "kat":
+            _, _, domain_key, cat = item
+            parts.append(format_category(domain_key, cat))
+        else:
+            _, _, (b_idx, bob_idx, m_idx), _modda = item
+            parts.append(format_modda(b_idx, bob_idx, m_idx))
+
+    reply = "\n\n---\n\n".join(parts) + DISCLAIMER
     send_message(chat_id, reply, reply_markup=domain_selection_keyboard())
     return "ok", 200
 
