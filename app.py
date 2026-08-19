@@ -83,23 +83,89 @@ KONST_BOLIM_QISQA = [
 
 APOSTROPHE_PATTERN = re.compile(r"[ʻʼ`´']")
 
+# ---------------------------------------------------------------------
+# KIRILL -> LOTIN transliteratsiya (o'zbekcha kirill klaviaturasidan
+# yozganlar uchun ham qidiruv ishlashi uchun)
+# ---------------------------------------------------------------------
+CYRILLIC_TO_LATIN = {
+    "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
+    "ж": "j", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
+    "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
+    "ф": "f", "х": "x", "ц": "s", "ч": "ch", "ш": "sh", "щ": "sh",
+    "ъ": "'", "ы": "i", "ь": "", "э": "e", "ю": "yu", "я": "ya",
+    "ў": "o'", "қ": "q", "ғ": "g'", "ҳ": "h",
+}
+
+
+def translit_cyrillic(text: str) -> str:
+    return "".join(CYRILLIC_TO_LATIN.get(ch, ch) for ch in text)
+
 
 def normalize(text: str) -> str:
     text = text.lower()
+    text = translit_cyrillic(text)
     text = APOSTROPHE_PATTERN.sub("'", text)
     text = re.sub(r"[^\w\s']", " ", text, flags=re.UNICODE)
     return text
 
 
+# ---------------------------------------------------------------------
+# IMLO XATOLARIGA CHIDAMLI (FUZZY) SO'Z SOLISHTIRISH
+# ---------------------------------------------------------------------
+def levenshtein(a: str, b: str) -> int:
+    if a == b:
+        return 0
+    if not a:
+        return len(b)
+    if not b:
+        return len(a)
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        curr = [i] + [0] * len(b)
+        for j, cb in enumerate(b, 1):
+            cost = 0 if ca == cb else 1
+            curr[j] = min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost)
+        prev = curr
+    return prev[-1]
+
+
+def words_match(w1: str, w2: str) -> bool:
+    if w1 == w2:
+        return True
+    if abs(len(w1) - len(w2)) > 2:
+        return False
+    threshold = 1 if len(w1) <= 6 else 2
+    return levenshtein(w1, w2) <= threshold
+
+
+def fuzzy_keyword_in_text(keyword_norm: str, text_words: list) -> bool:
+    """Kalit so'zning har bir bo'lagi matnda borligini tekshiradi:
+    - qo'shimchali shakllar uchun (masalan "tezlikni") - substring sifatida,
+    - imlo xatolari uchun (masalan "tezlk") - fuzzy masofa orqali."""
+    for kw_word in keyword_norm.split():
+        found = any(
+            kw_word in tw or words_match(kw_word, tw)
+            for tw in text_words
+        )
+        if not found:
+            return False
+    return True
+
+
 def find_matches(user_text: str, top_n: int = 3):
-    """Avto/nikoh (kalit so'z) + konstitutsiya (to'liq matn) bo'yicha qidiradi."""
+    """Avto/nikoh (kalit so'z) + konstitutsiya (to'liq matn) bo'yicha qidiradi.
+    Kirill matnni avtomatik lotinga o'tkazadi va kichik imlo xatolariga chidamli."""
     norm_text = normalize(user_text)
-    query_words = [w for w in norm_text.split() if len(w) >= 4]
+    text_words = norm_text.split()
+    query_words = [w for w in text_words if len(w) >= 4]
     scored = []
 
     for domain_key, domain in DOMAINS.items():
         for cat in domain["categories"]:
-            score = sum(1 for kw in cat["kalit_sozlar"] if normalize(kw) in norm_text)
+            score = sum(
+                1 for kw in cat["kalit_sozlar"]
+                if fuzzy_keyword_in_text(normalize(kw), text_words)
+            )
             if score > 0:
                 scored.append((score, "kat", domain_key, cat))
 
@@ -107,8 +173,14 @@ def find_matches(user_text: str, top_n: int = 3):
         for b_idx, bolim in enumerate(KONST_BOLIMLAR):
             for bob_idx, bob in enumerate(bolim["boblar"]):
                 for m_idx, modda in enumerate(bob["moddalar"]):
-                    norm_matn = normalize(modda["matn"])
-                    score = sum(1 for w in query_words if w in norm_matn)
+                    norm_matn_words = modda.get("_norm_words")
+                    if norm_matn_words is None:
+                        norm_matn_words = normalize(modda["matn"]).split()
+                        modda["_norm_words"] = norm_matn_words
+                    score = sum(
+                        1 for qw in query_words
+                        if any(words_match(qw, tw) for tw in norm_matn_words)
+                    )
                     if score > 0:
                         scored.append((score, "konst", (b_idx, bob_idx, m_idx), modda))
 
