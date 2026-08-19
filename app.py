@@ -25,6 +25,26 @@ TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 app = Flask(__name__)
 
 
+def get_bot_username() -> str:
+    """Botning @username'ini Telegram API orqali avtomatik aniqlaydi (ulashish havolasi uchun)."""
+    try:
+        resp = requests.get(f"{TELEGRAM_API}/getMe", timeout=10)
+        data = resp.json()
+        if data.get("ok"):
+            return data["result"]["username"]
+    except requests.RequestException:
+        pass
+    return None
+
+
+BOT_USERNAME = get_bot_username()
+SHARE_URL = (
+    f"https://t.me/share/url?url=https://t.me/{BOT_USERNAME}"
+    "&text=O'zbekiston%20qonunchiligi%20bo'yicha%20bepul%20yordamchi%20bot!"
+    if BOT_USERNAME else None
+)
+
+
 def load_json(filename: str) -> dict:
     path = os.path.join(BASE_DIR, filename)
     with open(path, "r", encoding="utf-8") as f:
@@ -250,6 +270,8 @@ START_MESSAGE = (
 def domain_selection_keyboard() -> dict:
     rows = [[{"text": d["label"], "callback_data": f"dom_{key}"}] for key, d in DOMAINS.items()]
     rows.append([{"text": "⚖️ Konstitutsiya", "callback_data": "dom_konst"}])
+    if SHARE_URL:
+        rows.append([{"text": "📤 Do'stlarga ulashish", "url": SHARE_URL}])
     return {"inline_keyboard": rows}
 
 
