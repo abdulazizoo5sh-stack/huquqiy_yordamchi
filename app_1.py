@@ -9,6 +9,7 @@ Muhit o'zgaruvchilari (Render dashboard'da "Environment" bo'limida):
     BOT_TOKEN - BotFather'dan olingan token
 """
 
+import html
 import json
 import os
 import re
@@ -28,6 +29,11 @@ def load_json(filename: str) -> dict:
     path = os.path.join(BASE_DIR, filename)
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def esc(text: str) -> str:
+    """Telegram HTML formatlash uchun maxsus belgilarni xavfsizlashtiradi."""
+    return html.escape(str(text))
 
 
 # ---------------------------------------------------------------------
@@ -190,15 +196,15 @@ def find_matches(user_text: str, top_n: int = 3):
 
 def format_category(domain_key: str, cat: dict) -> str:
     domain_label = DOMAINS[domain_key]["label"]
-    lines = [f"{domain_label}", f"📌 {cat['mavzu']}"]
+    lines = [f"<b>{esc(domain_label)}</b>", f"📌 <b>{esc(cat['mavzu'])}</b>", ""]
     if cat.get("modda") and cat["modda"] != "-":
-        lines.append(f"Modda: {cat['modda']}")
+        lines.append(f"📖 <b>Modda:</b> {esc(cat['modda'])}")
     if cat.get("tavsif"):
-        lines.append(f"Tavsif: {cat['tavsif']}")
+        lines.append(f"📝 <b>Tavsif:</b> {esc(cat['tavsif'])}")
     if cat.get("jarima") and cat["jarima"] != "-":
-        lines.append(f"Jarima/Miqdor: {cat['jarima']}")
+        lines.append(f"💰 <b>Jarima/Miqdor:</b> {esc(cat['jarima'])}")
     if cat.get("izoh"):
-        lines.append(f"Izoh: {cat['izoh']}")
+        lines.append(f"\nℹ️ <b>Izoh:</b> {esc(cat['izoh'])}")
     return "\n".join(lines)
 
 
@@ -207,18 +213,19 @@ def format_modda(b_idx: int, bob_idx: int, m_idx: int) -> str:
     bob = bolim["boblar"][bob_idx]
     modda = bob["moddalar"][m_idx]
     lines = [
-        "⚖️ O'zbekiston Respublikasi Konstitutsiyasi",
-        f"{bob['nomi']}",
-        f"📜 {modda['raqam']}-modda",
+        "⚖️ <b>O'zbekiston Respublikasi Konstitutsiyasi</b>",
+        f"<i>{esc(bob['nomi'])}</i>",
         "",
-        modda["matn"],
+        f"📜 <b>{esc(modda['raqam'])}-modda</b>",
+        "",
+        esc(modda["matn"]),
     ]
     return "\n".join(lines)
 
 
 DISCLAIMER = (
-    "\n\n⚠️ Bu ma'lumot umumiy yo'nalish uchun, rasmiy yuridik maslahat emas. "
-    "Aniq holatlar uchun lex.uz yoki malakali yuristga murojaat qiling."
+    "\n\n<i>⚠️ Bu ma'lumot umumiy yo'nalish uchun, rasmiy yuridik maslahat emas. "
+    "Aniq holatlar uchun lex.uz yoki malakali yuristga murojaat qiling.</i>"
 )
 
 NOT_FOUND_MESSAGE = (
@@ -229,14 +236,14 @@ NOT_FOUND_MESSAGE = (
 )
 
 START_MESSAGE = (
-    "Salom! Men huquqiy yordamchi botman. ⚖️\n\n"
+    "Salom! 👋 Men <b>huquqiy yordamchi</b> botman. ⚖️\n\n"
     "Quyidagi sohalardan birini tanlang yoki muammoingizni to'g'ridan-to'g'ri "
-    "o'z so'zlaringiz bilan yozing - masalan:\n"
-    "• \"tezlikni oshirib qoldim\"\n"
-    "• \"aliment qancha to'lanadi\"\n"
-    "• \"so'z erkinligi\"\n\n"
-    "⚠️ Eslatma: men rasmiy yurist emasman, javoblarim umumiy yo'nalish "
-    "uchun. Muhim holatlarda malakali yuristga murojaat qiling."
+    "o'z so'zlaringiz bilan yozing, masalan:\n"
+    "• <i>\"tezlikni oshirib qoldim\"</i>\n"
+    "• <i>\"aliment qancha to'lanadi\"</i>\n"
+    "• <i>\"so'z erkinligi\"</i>\n\n"
+    "<i>⚠️ Eslatma: men rasmiy yurist emasman, javoblarim umumiy yo'nalish "
+    "uchun. Muhim holatlarda malakali yuristga murojaat qiling.</i>"
 )
 
 
@@ -315,10 +322,22 @@ def konst_modda_answer_keyboard(b_idx: int, bob_idx: int) -> dict:
 
 
 def send_message(chat_id: int, text: str, reply_markup: dict = None) -> None:
-    payload = {"chat_id": chat_id, "text": text}
+    payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
     if reply_markup:
         payload["reply_markup"] = json.dumps(reply_markup)
     requests.post(f"{TELEGRAM_API}/sendMessage", json=payload, timeout=10)
+
+
+def send_typing(chat_id: int) -> None:
+    """Foydalanuvchiga bot javob tayyorlayotganini bildiruvchi 'yozyapti...' indikatori."""
+    try:
+        requests.post(
+            f"{TELEGRAM_API}/sendChatAction",
+            json={"chat_id": chat_id, "action": "typing"},
+            timeout=5,
+        )
+    except requests.RequestException:
+        pass
 
 
 def answer_callback_query(callback_query_id: str) -> None:
@@ -352,7 +371,7 @@ def webhook():
             elif data == "dom_konst":
                 send_message(
                     chat_id,
-                    "⚖️ Konstitutsiya\n\nBo'lim tanlang:",
+                    "⚖️ <b>Konstitutsiya</b>\n\nBo'lim tanlang:",
                     reply_markup=konst_bolim_keyboard(),
                 )
 
@@ -362,7 +381,7 @@ def webhook():
                     label = DOMAINS[domain_key]["label"]
                     send_message(
                         chat_id,
-                        f"{label}\n\nMavzu tanlang yoki muammoingizni yozing:",
+                        f"<b>{esc(label)}</b>\n\nMavzu tanlang yoki muammoingizni yozing:",
                         reply_markup=topics_keyboard(domain_key),
                     )
 
@@ -379,7 +398,7 @@ def webhook():
                 bob = KONST_BOLIMLAR[b_idx]["boblar"][bob_idx]
                 send_message(
                     chat_id,
-                    f"⚖️ {bob['nomi']}\n\nModda tanlang:",
+                    f"⚖️ <b>{esc(bob['nomi'])}</b>\n\nModda tanlang:",
                     reply_markup=konst_modda_keyboard(b_idx, bob_idx),
                 )
 
@@ -388,7 +407,7 @@ def webhook():
                 bolim = KONST_BOLIMLAR[b_idx]
                 send_message(
                     chat_id,
-                    f"⚖️ {bolim['nomi']}\n\nBob tanlang:",
+                    f"⚖️ <b>{esc(bolim['nomi'])}</b>\n\nBob tanlang:",
                     reply_markup=konst_bob_keyboard(b_idx),
                 )
 
@@ -410,6 +429,7 @@ def webhook():
 
     chat_id = message["chat"]["id"]
     text = message["text"]
+    send_typing(chat_id)
 
     if text.strip() in ("/start", "/help", "/menu"):
         send_message(chat_id, START_MESSAGE, reply_markup=domain_selection_keyboard())
@@ -429,7 +449,7 @@ def webhook():
             _, _, (b_idx, bob_idx, m_idx), _modda = item
             parts.append(format_modda(b_idx, bob_idx, m_idx))
 
-    reply = "\n\n---\n\n".join(parts) + DISCLAIMER
+    reply = "\n\n➖➖➖➖➖➖➖➖➖➖\n\n".join(parts) + DISCLAIMER
     send_message(chat_id, reply, reply_markup=domain_selection_keyboard())
     return "ok", 200
 
