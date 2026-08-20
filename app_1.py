@@ -7,12 +7,14 @@ ishlatilmaydi - kalit so'z qidiruvi (avto/nikoh) + to'liq matn qidiruvi
 
 Muhit o'zgaruvchilari (Render dashboard'da "Environment" bo'limida):
     BOT_TOKEN - BotFather'dan olingan token
+    ADMIN_CHAT_ID - (ixtiyoriy) statistikani qabul qiladigan Telegram ID
 """
 
 import html
 import json
 import os
 import re
+from datetime import datetime, timezone, timedelta
 
 import requests
 from flask import Flask, request
@@ -21,6 +23,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
+ADMIN_CHAT_ID = os.environ.get("ADMIN_CHAT_ID")
+TASHKENT_TZ = timezone(timedelta(hours=5))
 
 app = Flask(__name__)
 
@@ -43,6 +47,34 @@ SHARE_URL = (
     "&text=O'zbekiston%20qonunchiligi%20bo'yicha%20bepul%20yordamchi%20bot!"
     if BOT_USERNAME else None
 )
+
+
+def log_to_admin(user_info: dict, action: str) -> None:
+    """Foydalanuvchi savolini/tanlovini adminning shaxsiy Telegram'iga yuboradi (statistika)."""
+    if not ADMIN_CHAT_ID:
+        return
+    try:
+        name = user_info.get("first_name", "")
+        if user_info.get("last_name"):
+            name += " " + user_info["last_name"]
+        username = user_info.get("username")
+        uname_part = f"@{username}" if username else "username yo'q"
+        uid = user_info.get("id", "?")
+        time_str = datetime.now(TASHKENT_TZ).strftime("%d.%m.%Y %H:%M")
+
+        text = (
+            f"📊 <b>Statistika</b>\n"
+            f"👤 {esc(name)} ({esc(uname_part)}, id: {uid})\n"
+            f"🕐 {time_str}\n"
+            f"{action}"
+        )
+        requests.post(
+            f"{TELEGRAM_API}/sendMessage",
+            json={"chat_id": ADMIN_CHAT_ID, "text": text, "parse_mode": "HTML"},
+            timeout=10,
+        )
+    except requests.RequestException:
+        pass
 
 
 def load_json(filename: str) -> dict:
@@ -413,6 +445,10 @@ def webhook():
                 cat = DOMAINS[domain_key]["categories"][idx]
                 reply = format_category(domain_key, cat) + DISCLAIMER
                 send_message(chat_id, reply, reply_markup=answer_keyboard(domain_key))
+                log_to_admin(
+                    callback_query.get("from", {}),
+                    f"🔘 Mavzu: {DOMAINS[domain_key]['label']} → {cat['mavzu']}",
+                )
 
             elif data.startswith("kbob_"):
                 _, b_idx_str, bob_idx_str = data.split("_", 2)
@@ -438,6 +474,11 @@ def webhook():
                 b_idx, bob_idx, m_idx = int(b_idx_str), int(bob_idx_str), int(m_idx_str)
                 reply = format_modda(b_idx, bob_idx, m_idx) + DISCLAIMER
                 send_message(chat_id, reply, reply_markup=konst_modda_answer_keyboard(b_idx, bob_idx))
+                modda = KONST_BOLIMLAR[b_idx]["boblar"][bob_idx]["moddalar"][m_idx]
+                log_to_admin(
+                    callback_query.get("from", {}),
+                    f"🔘 Konstitutsiya: {modda['raqam']}-modda",
+                )
 
         except (ValueError, IndexError, KeyError):
             send_message(chat_id, NOT_FOUND_MESSAGE, reply_markup=domain_selection_keyboard())
@@ -460,19 +501,28 @@ def webhook():
     matches = find_matches(text)
     if not matches:
         send_message(chat_id, NOT_FOUND_MESSAGE, reply_markup=domain_selection_keyboard())
+        log_to_admin(message.get("from", {}), f"💬 Savol: {esc(text)}\n❌ Natija: topilmadi")
         return "ok", 200
 
     parts = []
+    result_summary = []
     for item in matches:
         if item[1] == "kat":
             _, _, domain_key, cat = item
             parts.append(format_category(domain_key, cat))
+            result_summary.append(f"{DOMAINS[domain_key]['label']} → {cat['mavzu']}")
         else:
             _, _, (b_idx, bob_idx, m_idx), _modda = item
             parts.append(format_modda(b_idx, bob_idx, m_idx))
+            modda_raqam = KONST_BOLIMLAR[b_idx]["boblar"][bob_idx]["moddalar"][m_idx]["raqam"]
+            result_summary.append(f"Konstitutsiya {modda_raqam}-modda")
 
     reply = "\n\n➖➖➖➖➖➖➖➖➖➖\n\n".join(parts) + DISCLAIMER
     send_message(chat_id, reply, reply_markup=domain_selection_keyboard())
+    log_to_admin(
+        message.get("from", {}),
+        f"💬 Savol: {esc(text)}\n✅ Natija: {esc(', '.join(result_summary))}",
+    )
     return "ok", 200
 
 
